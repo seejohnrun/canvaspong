@@ -60,16 +60,20 @@
 		// initial positions
 		var xPos = 0, yPos = Math.floor(Math.random() * document.body.clientHeight);
 
-	  context.fillStyle = 'rgb(0, 0, 90)';
+		// styles
+    context.fillStyle = '#0099cc';
+    context.strokeStyle = '#333';
+	
   	var interval = setInterval(function() {
 				
 		  context.clearRect(xPos - xSpeed - circleRadius, yPos - ySpeed - circleRadius, circleRadius * 2, circleRadius * 2);
 
       // draw the circle
-			context.beginPath();
-			context.arc(xPos, yPos, circleRadius, 0, Math.PI * 2, true);
+      context.beginPath();
+			context.arc(xPos, yPos, circleRadius - 1, 0, Math.PI * 2, true); // leave room for the stroke
 			context.closePath();
 			context.fill();
+			context.stroke();
 
 			if (xPos < 0)
 			{
