@@ -3,9 +3,20 @@
   <head>
 
     <title>Canvas Pong</title>
+
     <style type="text/css">
-      body { margin: 0px; padding: 0px; width: 100%; height: 100%; font-size: 10px; line-height: 1em; background: #eee; }
-      #canvas { position: fixed; }
+      body {
+        margin: 0px;
+        padding: 0px;
+        font-size: 10px;
+        line-height: 1em;
+        background: #eee; 
+      }
+      #canvas {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+      }
       #twitter {
         position: fixed;
         bottom: 30px;
@@ -36,13 +47,12 @@
       // TODO other paddle
       // TODO beautify
       // TODO arrow to describe the game
-      // TODO click to start
       // TODO put the ball in the center and have it decide which way to go
       // TODO cleaner hits
       // TODO allow switching difficulties
       // TODO doctype
       // TODO make 'update yo shit' be something real
-      // TODO figure out a better way to calculate 'position' below - its not working properly
+      // DONETODO click to start
       // DONETODO twitter link
       // DONETODO clean up all the messy code
       // DONETODO only clear what needs to clear
@@ -61,19 +71,21 @@
         // This is the radius of the circle
         this.circleRadius = 10;
 
-        // This is the xSpeed of the ball, which will be added to the xPos on each iteration
-        this.xSpeed = 5;
-
-        // This is the ySpeed of the ball, which will be added to the yPos on each iteration
-        // Initially, this is decided to be either negative or positive
-        this.ySpeed = Math.random() > 0.5 ? 5 : -5;
-
-        // This is the xPosition of the ball
-        this.xPos = 0;
-
-        // This is the yPosition of the ball
-        // initially dynamically decided randomly
-        this.yPos = Math.floor(Math.random() * document.body.clientHeight);
+        // This is to set up to a neutral place to get ready to start playing
+        this.reset = function() {
+          // Clear the ball away from where it was
+          this.clear();
+          // This is the xSpeed of the ball, which will be added to the xPos on each iteration
+          this.xSpeed = 5;
+          // This is the ySpeed of the ball, which will be added to the yPos on each iteration
+          // Initially, this is decided to be either negative or positive
+          this.ySpeed = Math.random() > 0.5 ? 5 : -5;
+          // This is the xPosition of the ball
+          this.xPos = 0;
+          // This is the yPosition of the ball
+          // initially dynamically decided randomly
+          this.yPos = Math.floor(Math.random() * document.body.clientHeight);
+        }
 
         // Draw the ball in the given context
         this.draw = function() {
@@ -85,6 +97,11 @@
           this.context.closePath();
           this.context.fill();
           this.context.stroke();
+        }
+
+        // This will clear the ball from the given context
+        this.clear = function() {
+          this.context.clearRect(this.xPos - this.circleRadius, this.yPos - this.circleRadius, this.circleRadius * 2, this.circleRadius * 2);
         }
 
         // This will clear the move of the ball from the given context
@@ -103,6 +120,8 @@
           if ((this.yPos > this.$canvas.height - this.circleRadius) || (this.yPos < 0)) this.ySpeed = -this.ySpeed;
           this.yPos += this.ySpeed;
         }
+
+        this.reset();
 
       }
 
@@ -123,31 +142,42 @@
       $canvas.width = document.body.clientWidth;
       $canvas.height = document.body.clientHeight;
       var context = $canvas.getContext('2d');
-      
+
       // Get a ball
       var ball = new Ball(context);
-    
-      // Keep it moving, bro
-      var interval = setInterval(function() {
 
-        // If we're on the right side, consider that the user may have just lost
-        if (ball.xPos >= $canvas.width - ball.circleRadius) {
-          // Determine the position of the hittern and break on a match
-          // Since this is scrollTop we need to offset it by clientHeight
-          // NOTE: position represents the TOP of the hitter
-          var position = (document.body.scrollTop / document.body.scrollHeight) * document.body.clientHeight;
-          if (ball.yPos < position || ball.yPos > position + hitterHeight) {
-            document.body.style.background = '#660000';
-            clearInterval(interval);
+      window.onmouseup = function() {
+
+        // Set the background to a non-error color
+        document.body.style.background = '#eee';
+     
+        // Keep it moving, bro
+        var interval = setInterval(function() {
+
+          // If we're on the right side, consider that the user may have just lost
+          if (ball.xPos >= $canvas.width - ball.circleRadius) {
+            // Determine the position of the hittern and break on a match
+            // Since this is scrollTop we need to offset it by clientHeight
+            // NOTE: position represents the TOP of the hitter
+            var position = (document.body.scrollTop / document.body.scrollHeight) * document.body.clientHeight;
+            if (ball.yPos < position || ball.yPos > position + hitterHeight) {
+              document.body.style.background = '#660000';
+              clearInterval(interval);
+              return; // stop moving
+            }
           }
-        }
 
-        // Move the ball and draw it
-        ball.move();
-        ball.clearLast();
-        ball.draw();
+          // Move the ball and draw it
+          ball.move();
+          ball.clearLast();
+          ball.draw();
 
-      }, 1000 / fps);
+        }, 1000 / fps);
+
+        // Reset the ball after each game
+        ball.reset();
+
+      }
 
     </script>
 
