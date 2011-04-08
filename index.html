@@ -22,7 +22,7 @@
 		// TODO click to start
 		// DONETODO only clear what needs to clear
 		// DONETODO change name of circle size to radius
-		// TODO make it possible to start off going in the POSITIVE y as well
+		// DONETODO make it possible to start off going in the POSITIVE y as well
   </script>
 
 	<script type="text/javascript">
@@ -33,6 +33,10 @@
 		var circleRadius = 8;
 		var xSpeed = 5;
 		var ySpeed = 5;
+		var fps = 100;
+
+		// sometimes invert the ySpeed - so it can stard in a random direction
+		if (Math.random() < 0.5) ySpeed = -ySpeed;
 
 		// get the space
 		document.body.style.height = document.body.clientHeight * difficulty;
@@ -94,7 +98,7 @@
 			if ((yPos > canvas.height - circleRadius) || (yPos < 0)) ySpeed = -ySpeed;
 			yPos += ySpeed;
 
-  	}, 10);
+  	}, 1000 / fps);
 
 
 	</script>
