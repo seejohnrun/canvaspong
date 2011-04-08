@@ -2,151 +2,151 @@
 
   <head>
 
-		<title>Canvas Pong</title>
-		<style type="text/css">
-			body { margin: 0px; padding: 0px; width: 100%; height: 100%; font-size: 10px; line-height: 1em; background: #eee; }
-			#canvas { position: fixed; }
-			#twitter {
-				position: fixed;
-				bottom: 30px;
-				left: 20px;
-				font-size: 42px;
-			}
-			a, a:visited {
-				color: blue;
-				text-decoration: none;
-			}
-		</style>
+    <title>Canvas Pong</title>
+    <style type="text/css">
+      body { margin: 0px; padding: 0px; width: 100%; height: 100%; font-size: 10px; line-height: 1em; background: #eee; }
+      #canvas { position: fixed; }
+      #twitter {
+        position: fixed;
+        bottom: 30px;
+        left: 20px;
+        font-size: 42px;
+      }
+      a, a:visited {
+        color: blue;
+        text-decoration: none;
+      }
+    </style>
 
   </head>
 
-	<body>
+  <body>
 
-		<canvas id="canvas">
-			upgrade yo shit
-		</canvas>
+    <canvas id="canvas">
+      upgrade yo shit
+    </canvas>
 
-		<div id="twitter">
-			<a href="http://twitter.com/seejohnrun">@seejohnrun on twitter</a>
-		</div>
+    <div id="twitter">
+      <a href="http://twitter.com/seejohnrun">@seejohnrun on twitter</a>
+    </div>
 
-		<script>
-			// TODO make the page unable to scroll after its over
-			// TODO keep score
-			// TODO other paddle
-			// TODO beautify
-			// TODO arrow to describe the game
-			// TODO click to start
-			// TODO put the ball in the center and have it decide which way to go
-			// TODO cleaner hits
-			// TODO allow switching difficulties
-			// TODO doctype
-			// TODO make 'update yo shit' be something real
-			// DONETODO twitter link
-			// DONETODO clean up all the messy code
-			// DONETODO only clear what needs to clear
-			// DONETODO change name of circle size to radius
-			// DONETODO make it possible to start off going in the POSITIVE y as well
-		</script>
+    <script>
+      // TODO make the page unable to scroll after its over
+      // TODO keep score
+      // TODO other paddle
+      // TODO beautify
+      // TODO arrow to describe the game
+      // TODO click to start
+      // TODO put the ball in the center and have it decide which way to go
+      // TODO cleaner hits
+      // TODO allow switching difficulties
+      // TODO doctype
+      // TODO make 'update yo shit' be something real
+      // DONETODO twitter link
+      // DONETODO clean up all the messy code
+      // DONETODO only clear what needs to clear
+      // DONETODO change name of circle size to radius
+      // DONETODO make it possible to start off going in the POSITIVE y as well
+    </script>
 
-		<script type="text/javascript">
+    <script type="text/javascript">
 
-			function Ball(context) {
+      function Ball(context) {
 
-				// Load the canvas and context
-				this.$canvas = context.canvas;
-				this.context = context;
+        // Load the canvas and context
+        this.$canvas = context.canvas;
+        this.context = context;
 
-		  	// This is the radius of the circle
-				this.circleRadius = 10;
+        // This is the radius of the circle
+        this.circleRadius = 10;
 
-				// This is the xSpeed of the ball, which will be added to the xPos on each iteration
-				this.xSpeed = 5;
+        // This is the xSpeed of the ball, which will be added to the xPos on each iteration
+        this.xSpeed = 5;
 
-				// This is the ySpeed of the ball, which will be added to the yPos on each iteration
-				// Initially, this is decided to be either negative or positive
-				this.ySpeed = Math.random() > 0.5 ? 5 : -5;
+        // This is the ySpeed of the ball, which will be added to the yPos on each iteration
+        // Initially, this is decided to be either negative or positive
+        this.ySpeed = Math.random() > 0.5 ? 5 : -5;
 
-				// This is the xPosition of the ball
-				this.xPos = 0;
+        // This is the xPosition of the ball
+        this.xPos = 0;
 
-				// This is the yPosition of the ball
-				// initially dynamically decided randomly
-				this.yPos = Math.floor(Math.random() * document.body.clientHeight);
+        // This is the yPosition of the ball
+        // initially dynamically decided randomly
+        this.yPos = Math.floor(Math.random() * document.body.clientHeight);
 
-				// Draw the ball in the given context
-				this.draw = function() {
-	  			this.context.fillStyle = '#555';
-		  		this.context.strokeStyle = 'black';
+        // Draw the ball in the given context
+        this.draw = function() {
+          this.context.fillStyle = '#555';
+          this.context.strokeStyle = 'black';
 
-			  	this.context.beginPath();
-					this.context.arc(this.xPos, this.yPos, this.circleRadius - 1, 0, Math.PI * 2, true); // leave room for the stroke
-					this.context.closePath();
-					this.context.fill();
-					this.context.stroke();
-		  	}
-
-				// This will clear the move of the ball from the given context
-				// The reason we clear last instead of clearing current is for performance to reduce flicker on computation
-				// for slow machines
-				this.clearLast = function() {
-					this.context.clearRect(this.xPos - this.xSpeed - this.circleRadius, this.yPos - this.ySpeed - this.circleRadius, this.circleRadius * 2, this.circleRadius * 2);
-				}
-
-				// Make the next move for the ball
-			  this.move = function(hitterFrom, hitterTo) {	
-					// Move horizontally
-					if ((this.xPos > this.$canvas.width - this.circleRadius) || (this.xPos < 0)) this.xSpeed = -this.xSpeed;
-					this.xPos += this.xSpeed;
-					// And vertically
-					if ((this.yPos > this.$canvas.height - this.circleRadius) || (this.yPos < 0)) this.ySpeed = -this.ySpeed;
-					this.yPos += this.ySpeed;
+          this.context.beginPath();
+          this.context.arc(this.xPos, this.yPos, this.circleRadius - 1, 0, Math.PI * 2, true); // leave room for the stroke
+          this.context.closePath();
+          this.context.fill();
+          this.context.stroke();
         }
 
-			}
+        // This will clear the move of the ball from the given context
+        // The reason we clear last instead of clearing current is for performance to reduce flicker on computation
+        // for slow machines
+        this.clearLast = function() {
+          this.context.clearRect(this.xPos - this.xSpeed - this.circleRadius, this.yPos - this.ySpeed - this.circleRadius, this.circleRadius * 2, this.circleRadius * 2);
+        }
 
-			// settings
-			var difficulty = 3;
-			var fps = 100;
+        // Make the next move for the ball
+        this.move = function(hitterFrom, hitterTo) {  
+          // Move horizontally
+          if ((this.xPos > this.$canvas.width - this.circleRadius) || (this.xPos < 0)) this.xSpeed = -this.xSpeed;
+          this.xPos += this.xSpeed;
+          // And vertically
+          if ((this.yPos > this.$canvas.height - this.circleRadius) || (this.yPos < 0)) this.ySpeed = -this.ySpeed;
+          this.yPos += this.ySpeed;
+        }
 
-			// get the space
-			document.body.style.height = document.body.clientHeight * difficulty;
+      }
 
-			// get the hitter height
-			// 62 is a ratio tested in firefox, safari, and chrome for getting the size of the
-			// handle relative to the visible content of the page
-			var hitterHeight = document.body.scrollHeight / document.body.clientHeight * 62;
+      // settings
+      var difficulty = 3;
+      var fps = 100;
 
-			// get the canvas
-			var $canvas = document.getElementById('canvas');
-			$canvas.width = document.body.clientWidth;
-			$canvas.height = document.body.clientHeight;
-		  var context = $canvas.getContext('2d');
-			
-			// Get a ball
-			var ball = new Ball(context);
-		
-			// Keep it moving, bro
-			var interval = setInterval(function() {
+      // get the space
+      document.body.style.height = document.body.clientHeight * difficulty;
 
-				// If we're on the right side, consider that the user may have just lost
-				if (ball.xPos >= $canvas.width - ball.circleRadius) {
-					// Determine the position of the hittern and break on a match
-					var position = (document.body.scrollTop / document.body.scrollHeight) * document.body.clientHeight;
-					if (ball.yPos < position || ball.yPos > position + hitterHeight) {
-						document.body.style.background = '#660000';
-						clearInterval(interval);
-					}
-				}
+      // get the hitter height
+      // 62 is a ratio tested in firefox, safari, and chrome for getting the size of the
+      // handle relative to the visible content of the page
+      var hitterHeight = document.body.scrollHeight / document.body.clientHeight * 62;
 
-				// Move the ball and draw it
-			  ball.move();
-				ball.clearLast();
-				ball.draw();
+      // get the canvas
+      var $canvas = document.getElementById('canvas');
+      $canvas.width = document.body.clientWidth;
+      $canvas.height = document.body.clientHeight;
+      var context = $canvas.getContext('2d');
+      
+      // Get a ball
+      var ball = new Ball(context);
+    
+      // Keep it moving, bro
+      var interval = setInterval(function() {
 
-			}, 1000 / fps);
+        // If we're on the right side, consider that the user may have just lost
+        if (ball.xPos >= $canvas.width - ball.circleRadius) {
+          // Determine the position of the hittern and break on a match
+          var position = (document.body.scrollTop / document.body.scrollHeight) * document.body.clientHeight;
+          if (ball.yPos < position || ball.yPos > position + hitterHeight) {
+            document.body.style.background = '#660000';
+            clearInterval(interval);
+          }
+        }
 
-		</script>
+        // Move the ball and draw it
+        ball.move();
+        ball.clearLast();
+        ball.draw();
+
+      }, 1000 / fps);
+
+    </script>
 
   </body>
 
