@@ -1,0 +1,102 @@
+<body>
+
+	<title>Canvas Pong</title>
+  <style type="text/css">
+		body { margin: 0px; padding: 0px; width: 100%; height: 100%; font-size: 10px; line-height: 1em; background: #eee; }
+    #canvas { position: fixed; }
+  </style>
+
+	<canvas id="canvas">
+		upgrade yo shit
+	</canvas>
+
+	<pre id="space"></pre>
+
+	<script>
+		// TODO make the page unable to scroll after its over
+		// TODO keep score
+		// TODO other paddle
+		// TODO textures
+		// TODO arrow to describe the game
+		// TODO twitter link
+		// TODO click to start
+		// DONETODO only clear what needs to clear
+		// DONETODO change name of circle size to radius
+		// TODO make it possible to start off going in the POSITIVE y as well
+  </script>
+
+	<script type="text/javascript">
+
+		// settings
+	  var difficulty = 3;
+		var hitterRatio = 62; // chrome, firefox, and safari
+		var circleRadius = 8;
+		var xSpeed = 5;
+		var ySpeed = 5;
+
+		// get the space
+		document.body.style.height = document.body.clientHeight * difficulty;
+
+		// get the hitter height
+		var hitterHeight = document.body.scrollHeight / document.body.clientHeight * hitterRatio;
+
+		// get the canvas
+		var canvas = document.getElementById('canvas');
+		canvas.width = document.body.clientWidth;
+    canvas.height = document.body.clientHeight;
+
+		// scroll to a random position
+		window.scrollTo(0, Math.floor(Math.random() * document.body.scrollHeight));
+
+  </script>
+
+	<script type="text/javascript">
+		var context = canvas.getContext('2d');
+
+		// initial positions
+		var xPos = 0, yPos = Math.floor(Math.random() * document.body.clientHeight);
+
+	  context.fillStyle = 'rgb(0, 0, 90)';
+  	var interval = setInterval(function() {
+				
+		  context.clearRect(xPos - xSpeed - circleRadius, yPos - ySpeed - circleRadius, circleRadius * 2, circleRadius * 2);
+
+      // draw the circle
+			context.beginPath();
+			context.arc(xPos, yPos, circleRadius, 0, Math.PI * 2, true);
+			context.closePath();
+			context.fill();
+
+			if (xPos < 0)
+			{
+				xSpeed = -xSpeed;
+			}
+			else if (xPos > canvas.width - circleRadius)
+			{
+				// get the position on the screen
+			  var position = (document.body.scrollTop / document.body.scrollHeight) * document.body.clientHeight;
+
+				// if the slider is in the right spot, bounce it back
+			  // otherwise, kill the game
+				if (yPos >= position && yPos <= position + hitterHeight )
+			  {
+				  xSpeed = -xSpeed;
+			  }
+				else 
+				{
+				  document.body.style.background = '#660000';
+					clearInterval(interval);
+				}
+			}
+		  xPos += xSpeed;
+
+			// Top and bottom of the screen are solid
+			if ((yPos > canvas.height - circleRadius) || (yPos < 0)) ySpeed = -ySpeed;
+			yPos += ySpeed;
+
+  	}, 10);
+
+
+	</script>
+
+</body>
