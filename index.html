@@ -44,7 +44,6 @@
     <script>
       // TODO make the page unable to scroll after its over
       // TODO keep score
-      // TODO other paddle
       // TODO beautify
       // TODO arrow to describe the game
       // TODO put the ball in the center and have it decide which way to go
@@ -52,6 +51,9 @@
       // TODO allow switching difficulties
       // TODO doctype
       // TODO make 'update yo shit' be something real
+      // TODO don't clear the paddle so aggressively
+      // TODO don't hard code paddle xPos in ball#draw
+      // DONETODO other paddle
       // DONETODO click to start
       // DONETODO twitter link
       // DONETODO clean up all the messy code
@@ -61,6 +63,56 @@
     </script>
 
     <script type="text/javascript">
+
+      function Paddle(context, ball) {
+
+        // Load the canvas and context
+        this.$canvas = context.canvas;
+        this.context = context;
+
+        // The ball we are trying to track
+        this.ball = ball;
+
+        // Dimensions and colors
+        this.paddleWidth = 20;
+        this.paddleHeight = 100;
+        this.fillColor = 'blue';
+        this.strokeColor = '#000';
+
+        // The X position never changes
+        this.xPos = 0;
+
+        // The speed the paddle can move - never changes
+        this.ySpeed = 3; // slower than the ball
+
+        // Get the paddle ready to go - by default the paddle starts in the center of the screen
+        this.reset = function() {
+          this.yPos = document.body.clientHeight / 2 - this.paddleHeight / 2;
+        }
+
+        // Draw the rectangular paddle into the given context
+        this.draw = function() {
+          this.context.fillStyle = this.fillColor;
+          this.context.strokeStyle = this.strokeColor;
+          this.context.fillRect(this.xPos, this.yPos, this.paddleWidth - 2, this.paddleHeight - 2); // account for stroke
+          this.context.stroke();
+        }
+
+        // Move the paddle to attempt to make its center even with the ball.  Limited by a max speed
+        this.move = function() {
+          var distance = this.ball.yPos - (this.yPos + this.paddleHeight / 2);
+          this.yPos += (distance < 0) ? -this.ySpeed : this.ySpeed;
+        }
+
+        // Clear from the last place we were.  The reason we clear larger than needed is to cover
+        // ordering of clears for performance reasons to avoid flicker
+        this.clear = function() {
+          this.context.clearRect(this.xPos, 0, this.paddleWidth, document.body.clientHeight);
+        }
+
+        this.reset();
+
+      }
 
       function Ball(context) {
 
@@ -83,7 +135,7 @@
           // Initially, this is decided to be either negative or positive
           this.ySpeed = Math.random() > 0.5 ? 5 : -5;
           // This is the xPosition of the ball
-          this.xPos = 0;
+          this.xPos = document.body.clientWidth / 2;
           // This is the yPosition of the ball
           // initially dynamically decided randomly
           this.yPos = Math.floor(Math.random() * document.body.clientHeight);
@@ -116,7 +168,7 @@
         // Make the next move for the ball
         this.move = function(hitterFrom, hitterTo) {  
           // Move horizontally
-          if ((this.xPos > this.$canvas.width - this.circleRadius) || (this.xPos < 0)) this.xSpeed = -this.xSpeed;
+          if ((this.xPos > this.$canvas.width - this.circleRadius) || (this.xPos < 20)) this.xSpeed = -this.xSpeed;
           this.xPos += this.xSpeed;
           // And vertically
           if ((this.yPos > this.$canvas.height - this.circleRadius) || (this.yPos < 0)) this.ySpeed = -this.ySpeed;
@@ -147,6 +199,7 @@
 
       // Get a ball
       var ball = new Ball(context);
+      var paddle = new Paddle(context, ball);
 
       window.onmouseup = function() {
 
@@ -168,6 +221,20 @@
               return; // stop moving
             }
           }
+
+          // If we're at the edge of the paddle, consider that it may not have gotten reflected
+          if (ball.xPos <= 20) {
+            if (ball.yPos < paddle.yPos || ball.yPos > paddle.yPos + paddle.paddleHeight) {
+              document.body.style.background = '#006600';
+              clearInterval(interval);
+              return; // stop moving
+            }
+          }
+
+          // Move the paddle and draw it - paddle is at a disadvantage cause its first
+          paddle.move();
+          paddle.clear();
+          paddle.draw();
 
           // Move the ball and draw it
           ball.move();
