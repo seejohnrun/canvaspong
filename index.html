@@ -70,6 +70,8 @@
 
         // This is the radius of the circle
         this.circleRadius = 10;
+        this.fillColor = '#555';
+        this.strokeColor = '#000';
 
         // This is to set up to a neutral place to get ready to start playing
         this.reset = function() {
@@ -89,8 +91,8 @@
 
         // Draw the ball in the given context
         this.draw = function() {
-          this.context.fillStyle = '#555';
-          this.context.strokeStyle = 'black';
+          this.context.fillStyle = this.fillColor;
+          this.context.strokeStyle = this.strokeColor;
 
           this.context.beginPath();
           this.context.arc(this.xPos, this.yPos, this.circleRadius - 1, 0, Math.PI * 2, true); // leave room for the stroke
