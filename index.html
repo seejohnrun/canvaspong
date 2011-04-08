@@ -42,6 +42,7 @@
       // TODO allow switching difficulties
       // TODO doctype
       // TODO make 'update yo shit' be something real
+      // TODO figure out a better way to calculate 'position' below - its not working properly
       // DONETODO twitter link
       // DONETODO clean up all the messy code
       // DONETODO only clear what needs to clear
@@ -115,7 +116,7 @@
       // get the hitter height
       // 62 is a ratio tested in firefox, safari, and chrome for getting the size of the
       // handle relative to the visible content of the page
-      var hitterHeight = document.body.scrollHeight / document.body.clientHeight * 62;
+      var hitterHeight = document.body.scrollHeight / document.body.clientHeight * 80;
 
       // get the canvas
       var $canvas = document.getElementById('canvas');
@@ -132,6 +133,8 @@
         // If we're on the right side, consider that the user may have just lost
         if (ball.xPos >= $canvas.width - ball.circleRadius) {
           // Determine the position of the hittern and break on a match
+          // Since this is scrollTop we need to offset it by clientHeight
+          // NOTE: position represents the TOP of the hitter
           var position = (document.body.scrollTop / document.body.scrollHeight) * document.body.clientHeight;
           if (ball.yPos < position || ball.yPos > position + hitterHeight) {
             document.body.style.background = '#660000';
