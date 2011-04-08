@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 
   <head>
@@ -34,12 +35,13 @@
 			// TODO make the page unable to scroll after its over
 			// TODO keep score
 			// TODO other paddle
-			// TODO textures
+			// TODO beautify
 			// TODO arrow to describe the game
-			// DONETODO twitter link
 			// TODO click to start
 			// TODO put the ball in the center and have it decide which way to go
 			// TODO cleaner hits
+			// TODO allow switching difficulties
+			// DONETODO twitter link
 			// DONETODO clean up all the messy code
 			// DONETODO only clear what needs to clear
 			// DONETODO change name of circle size to radius
@@ -104,14 +106,15 @@
 
 			// settings
 			var difficulty = 3;
-			var hitterRatio = 62; // chrome, firefox, and safari
 			var fps = 100;
 
 			// get the space
 			document.body.style.height = document.body.clientHeight * difficulty;
 
 			// get the hitter height
-			var hitterHeight = document.body.scrollHeight / document.body.clientHeight * hitterRatio;
+			// 62 is a ratio tested in firefox, safari, and chrome for getting the size of the
+			// handle relative to the visible content of the page
+			var hitterHeight = document.body.scrollHeight / document.body.clientHeight * 62;
 
 			// get the canvas
 			var $canvas = document.getElementById('canvas');
