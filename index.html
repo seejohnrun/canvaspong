@@ -4,7 +4,7 @@
   <head>
 
     <title>Canvas Pong</title>
-	  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 
     <style type="text/css">
       body {
@@ -49,21 +49,21 @@
   <body>
 
     <div id="intro">
-			HTML5 <a href="http://en.wikipedia.org/wiki/Canvas_element"><code>&lt;canvas&gt;</code></a> is all the rage these days.<br/>
-			This canvas pong game uses your scrollbar as the paddle.<br/>
-			Click to start!
+      HTML5 <a href="http://en.wikipedia.org/wiki/Canvas_element"><code>&lt;canvas&gt;</code></a> is all the rage these days.<br/>
+      This canvas pong game uses your scrollbar as the paddle.<br/>
+      Click to start!
     </div>
 
-		<canvas id="canvas">
-		<script type="text/javascript">
-			if (!document.getElementById('canvas').getContext) { // stop evaluation
-			  var html = 'This page is built using a <a href="http://en.wikipedia.org/wiki/Canvas_element">HTML5 <code>&lt;canvas&gt;</code></a> tag.<br/>';
-			  html += 'Unfortunately, it looks like your browser doesn\'t support them.<br/>';
+    <canvas id="canvas">
+    <script type="text/javascript">
+      if (!document.getElementById('canvas').getContext) { // stop evaluation
+        var html = 'This page is built using a <a href="http://en.wikipedia.org/wiki/Canvas_element">HTML5 <code>&lt;canvas&gt;</code></a> tag.<br/>';
+        html += 'Unfortunately, it looks like your browser doesn\'t support them.<br/>';
         html += 'Maybe you should upgrade to <a href="http://chrome.google.com/">Chrome</a> or <a href="http://getfirefox.com/">Firefox</a>.';
-			  document.getElementById('intro').innerHTML = html;
-			}
-		</script>
-	  </canvas>
+        document.getElementById('intro').innerHTML = html;
+      }
+    </script>
+    </canvas>
 
     <div id="twitter">
       <a href="http://twitter.com/seejohnrun">@seejohnrun on twitter</a>
@@ -73,9 +73,9 @@
 
     <script>
       // TODO make the page unable to scroll after its over
-			// TODO validate
+      // TODO validate
       // TODO beautify, performance, general cleanup, release OSS, make website
-			// TODO see if there's a better way to put a <script> inside of a <canvas> and have it not eval'ed
+      // TODO see if there's a better way to put a <script> inside of a <canvas> and have it not eval'ed
     </script>
 
     <script type="text/javascript">
@@ -137,30 +137,30 @@
         // Singular argument is the distance to the desired target
         this.edgeMove = function(distance) {
           if (distance < 0) {
-						if (this.top() > 0) {
-							this.yPos += -this.ySpeed;
-						}
+            if (this.top() > 0) {
+              this.yPos += -this.ySpeed;
+            }
           }
           else {
-						if (this.bottom() < this.$canvas.height) {
-							this.yPos += this.ySpeed;
-						}
+            if (this.bottom() < this.$canvas.height) {
+              this.yPos += this.ySpeed;
+            }
           }
         };
 
         // Move the paddle to attempt to make its center even with the ball.  Limited by a max speed
         // When the ball is headed away from the paddle, move to center to wait
         this.move = function(ball) {
-					var distance;
+          var distance;
           if (ball.xSpeed < 0) {
             distance = ball.yPos - (this.yPos + this.paddleHeight / 2);
             this.edgeMove(distance);
           }
           else {
             distance = this.$canvas.height / 2 - (this.yPos + this.paddleHeight / 2);
-						if (Math.abs(distance) >= this.ySpeed) {
-							this.edgeMove(distance); // no jitter
-						}
+            if (Math.abs(distance) >= this.ySpeed) {
+              this.edgeMove(distance); // no jitter
+            }
           }
         };
 
@@ -252,20 +252,20 @@
         // Make the next move for the ball
         this.move = function(hitterFrom, hitterTo) {  
           // Move horizontally
-					if (this.xPos >= this.$canvas.width - this.circleRadius) {
-						this.xSpeed = -this.magnitude;
-					}
-					else if (this.xPos <= leftEdge) {
-						this.xSpeed = this.magnitude;
-					}
+          if (this.xPos >= this.$canvas.width - this.circleRadius) {
+            this.xSpeed = -this.magnitude;
+          }
+          else if (this.xPos <= leftEdge) {
+            this.xSpeed = this.magnitude;
+          }
           this.xPos += this.xSpeed;
           // And vertically
-					if (this.yPos >= this.$canvas.height - this.circleRadius) {
-						this.ySpeed = -this.magnitude;
-					}
-					else if (this.yPos <= this.circleRadius) {
-						this.ySpeed = this.magnitude;
-					}
+          if (this.yPos >= this.$canvas.height - this.circleRadius) {
+            this.ySpeed = -this.magnitude;
+          }
+          else if (this.yPos <= this.circleRadius) {
+            this.ySpeed = this.magnitude;
+          }
           this.yPos += this.ySpeed;
         };
 
@@ -299,9 +299,9 @@
       var gameRunning = false;
       window.onmouseup = function() {
 
-				if (gameRunning) {
-					return;
-				}
+        if (gameRunning) {
+          return;
+        }
 
         // remove the intro box
         var $intro = document.getElementById('intro');
