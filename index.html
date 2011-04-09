@@ -114,11 +114,13 @@
 
         // Get the paddle ready to go - by default the paddle starts in the center of the screen
         this.reset = function() {
+          this.clear();
           this.yPos = $canvas.height / 2 - this.paddleHeight / 2;
         }
 
         // Draw the rectangular paddle into the given context
         this.draw = function() {
+          this.clear();
           this.context.fillStyle = this.fillColor;
           this.context.fillRect(this.xPos, this.yPos, this.paddleWidth, this.paddleHeight);
         }
@@ -204,6 +206,7 @@
 
         // Draw the ball in the given context
         this.draw = function() {
+          this.clearLast();
           this.context.fillStyle = this.fillColor;
 
           this.context.beginPath();
@@ -287,8 +290,7 @@
         var $intro = document.getElementById('intro');
         $intro.style.display = 'none';
 
-        // Reset the ball before each game
-        ball.clear();
+        // Reset the ball and paddle before each game
         ball.reset();
         paddle.reset();
 
@@ -303,9 +305,7 @@
           ball.move();
 
           // Draw the screen, clearing previous moves
-          ball.clearLast();
           ball.draw();
-          paddle.clear();
           paddle.draw();
 
           // If we're on the right side, consider that the user may have just lost
