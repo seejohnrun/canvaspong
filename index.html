@@ -52,7 +52,7 @@
     <canvas id="canvas">
       This page is built using a <a href=''>HTML5 <code>&lt;canvas&gt;</code> tag.</a>
       Unfortunately, it looks like your browser doesn't support that.
-      Maybe you should upgrade to <a href=''>Chrome</a> or <a href=''>Firefox</a>.
+      Maybe you should upgrade to <a href='http://chrome.google.com/'>Chrome</a> or <a href='http://getfirefox.com/'>Firefox</a>.
     </canvas>
 
     <div id="twitter">
@@ -60,7 +60,7 @@
     </div>
 
     <div id="intro">
-      HTML5 <code>&lt;canvas&gt;</code> is all the rage these days.
+      HTML5 <a href=''><code>&lt;canvas&gt;</code></a> is all the rage these days.
       This canvas pong game uses your scrollbar as the paddle.  Click to start!
     </div>
 
@@ -68,9 +68,8 @@
 
     <script>
       // TODO make the page unable to scroll after its over
-      // TODO beautify
       // TODO get real links for things
-      // TODO performance, general cleanup, release OSS, make website
+      // TODO beautify, performance, general cleanup, release OSS, make website
       // DONETODO paddle hits cleaner - one idea is to shrink the size of the canvas horizontally
       // DONETODO doctype
       // DONETODO describe the game
@@ -185,7 +184,7 @@
 
         // This is the radius of the circle
         this.circleRadius = 10;
-        this.fillColor = '#555';
+        this.fillColor = 'blue';
 
         // The magnitude in a certain vector
         this.magnitude = 5;
@@ -289,8 +288,11 @@
       // keep score
       var theirScore = 0;
       var yourScore = 0;
-      
+
+      var gameRunning = false;
       window.onmouseup = function() {
+
+        if (gameRunning) return;
 
         // remove the intro box
         var $intro = document.getElementById('intro');
@@ -305,6 +307,8 @@
      
         // Keep it moving, bro
         var interval = setInterval(function() {
+
+          gameRunning = true;
 
           // Move the paddle and ball - paddle is at a disadvantage cause its first
           paddle.move(ball);
@@ -324,6 +328,7 @@
               document.body.style.background = '#ee7777';
               document.getElementById('score').innerHTML = (theirScore += 1) + ' / ' + yourScore;
               clearInterval(interval);
+              gameRunning = false;
             }
           }
 
@@ -333,6 +338,7 @@
               document.body.style.background = '#77ee77';
               document.getElementById('score').innerHTML = theirScore + ' / ' + (yourScore += 1);
               clearInterval(interval);
+              gameRunning = false;
             }
           }
 
