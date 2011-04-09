@@ -39,7 +39,6 @@
         position: fixed;
         top: 30px;
         left: 30px;
-        width: 400px;
         line-height: 1em;
         text-align: left;
       }
@@ -48,12 +47,6 @@
   </head>
 
   <body>
-
-    <canvas id="canvas">
-      This page is built using a <a href=''>HTML5 <code>&lt;canvas&gt;</code> tag.</a>
-      Unfortunately, it looks like your browser doesn't support that.
-      Maybe you should upgrade to <a href='http://chrome.google.com/'>Chrome</a> or <a href='http://getfirefox.com/'>Firefox</a>.
-    </canvas>
 
     <div id="twitter">
       <a href="http://twitter.com/seejohnrun">@seejohnrun on twitter</a>
@@ -64,11 +57,21 @@
       This canvas pong game uses your scrollbar as the paddle.  Click to start!
     </div>
 
+		<canvas id="canvas">
+		<script type="text/javascript">
+			var html = 'This page is built using a <a href="">HTML5 <code>&lt;canvas&gt;</code></a> tag.<br/>';
+			html += 'Unfortunately, it looks like your browser doesn\'t support them.<br/>';
+      html += 'Maybe you should upgrade to <a href="http://chrome.google.com/">Chrome</a> or <a href="http://getfirefox.com/">Firefox</a>.';
+			document.getElementById('intro').innerHTML = html;
+		</script>
+	  </canvas>
+
     <div id="score"></div>
 
     <script>
       // TODO make the page unable to scroll after its over
       // TODO get real links for things
+			// TODO validate
       // TODO beautify, performance, general cleanup, release OSS, make website
     </script>
 
