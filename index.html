@@ -53,6 +53,7 @@
       // TODO make 'update yo shit' be something real
       // TODO don't clear the paddle so aggressively
       // TODO don't hard code paddle xPos in ball#draw
+			// TODO don't let the paddle descent off the screen
 			// DONETODO give them the same size paddle as us
       // DONETODO other paddle
       // DONETODO click to start
@@ -84,7 +85,7 @@
         this.xPos = 0;
 
         // The speed the paddle can move - never changes
-        this.ySpeed = 3; // slower than the ball
+        this.ySpeed = 4; // slightly slower than the ball
 
         // Get the paddle ready to go - by default the paddle starts in the center of the screen
         this.reset = function() {
@@ -100,9 +101,16 @@
         }
 
         // Move the paddle to attempt to make its center even with the ball.  Limited by a max speed
+				// When the ball is headed away from the paddle, move to center to wait
         this.move = function() {
-          var distance = this.ball.yPos - (this.yPos + this.paddleHeight / 2);
-          this.yPos += (distance < 0) ? -this.ySpeed : this.ySpeed;
+					if (ball.xSpeed < 0) {
+						var distance = this.ball.yPos - (this.yPos + this.paddleHeight / 2);
+					  this.yPos += (distance < 0) ? -this.ySpeed : this.ySpeed;
+					}
+					else {
+						var distance = document.body.clientHeight / 2 - (this.yPos + this.paddleHeight / 2);
+					  if (Math.abs(distance) >= this.ySpeed) this.yPos += (distance < 0) ? -this.ySpeed : this.ySpeed; // no jitter
+					}
         }
 
         // Clear from the last place we were.  The reason we clear larger than needed is to cover
@@ -131,9 +139,8 @@
           // Clear the ball away from where it was
           this.clear();
           // This is the xSpeed of the ball, which will be added to the xPos on each iteration
-          this.xSpeed = 5;
-          // This is the ySpeed of the ball, which will be added to the yPos on each iteration
-          // Initially, this is decided to be either negative or positive
+					// Initially, they are decided as either positive or negative
+					this.xSpeed = Math.random() > 0.5 ? 5 : -5;
           this.ySpeed = Math.random() > 0.5 ? 5 : -5;
           // This is the xPosition of the ball
           this.xPos = document.body.clientWidth / 2;
@@ -200,9 +207,13 @@
 
       // Get a ball
       var ball = new Ball(context);
-      var paddle = new Paddle(context, ball, hitterHeight);
+      var paddle = new Paddle(context, ball, hitterHeight / 1.5);
 
       window.onmouseup = function() {
+
+        // Reset the ball after each game
+				ball.clearLast();
+        ball.reset();
 
         // Set the background to a non-error color
         document.body.style.background = '#eee';
@@ -243,9 +254,6 @@
           ball.draw();
 
         }, 1000 / fps);
-
-        // Reset the ball after each game
-        ball.reset();
 
       }
 
