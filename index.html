@@ -43,10 +43,9 @@
 
     <script>
       // TODO make the page unable to scroll after its over
-      // TODO keep score
+      // TODO keep score on the screen
       // TODO beautify
       // TODO arrow to describe the game
-      // TODO allow switching difficulties
       // TODO doctype
       // TODO make 'update yo shit' be something real
       // TODO don't clear the paddle so aggressively
@@ -206,10 +205,8 @@
       // get the space
       document.body.style.height = document.body.clientHeight * difficulty;
 
-      // get the hitter height
-      // 62 is a ratio tested in firefox, safari, and chrome for getting the size of the
-      // handle relative to the visible content of the page
-      var hitterHeight = document.body.scrollHeight / document.body.clientHeight * 62;
+      // get the hitter height - cH^2/sH
+      var hitterHeight = Math.pow(document.body.clientHeight, 2) / document.body.scrollHeight;
 
       // get the canvas
       var $canvas = document.getElementById('canvas');
