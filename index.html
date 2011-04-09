@@ -46,14 +46,14 @@
       // TODO keep score
       // TODO beautify
       // TODO arrow to describe the game
-      // TODO put the ball in the center and have it decide which way to go
-      // TODO cleaner hits
       // TODO allow switching difficulties
       // TODO doctype
       // TODO make 'update yo shit' be something real
       // TODO don't clear the paddle so aggressively
       // TODO don't hard code paddle xPos in ball#draw
 			// TODO don't let the paddle descent off the screen
+      // DONETODO cleaner hits
+      // DONETODO put the ball in the center and have it decide which way to go
 			// DONETODO give them the same size paddle as us
       // DONETODO other paddle
       // DONETODO click to start
@@ -179,7 +179,7 @@
           if ((this.xPos > this.$canvas.width - this.circleRadius) || (this.xPos < 20)) this.xSpeed = -this.xSpeed;
           this.xPos += this.xSpeed;
           // And vertically
-          if ((this.yPos > this.$canvas.height - this.circleRadius) || (this.yPos < 0)) this.ySpeed = -this.ySpeed;
+          if ((this.yPos > this.$canvas.height - this.circleRadius) || (this.yPos < this.circleRadius)) this.ySpeed = -this.ySpeed;
           this.yPos += this.ySpeed;
         }
 
@@ -197,7 +197,7 @@
       // get the hitter height
       // 62 is a ratio tested in firefox, safari, and chrome for getting the size of the
       // handle relative to the visible content of the page
-      var hitterHeight = document.body.scrollHeight / document.body.clientHeight * 80;
+      var hitterHeight = document.body.scrollHeight / document.body.clientHeight * 62;
 
       // get the canvas
       var $canvas = document.getElementById('canvas');
@@ -207,7 +207,7 @@
 
       // Get a ball
       var ball = new Ball(context);
-      var paddle = new Paddle(context, ball, hitterHeight / 1.5);
+      var paddle = new Paddle(context, ball, hitterHeight);
 
       window.onmouseup = function() {
 
