@@ -96,61 +96,73 @@
         // Get the paddle ready to go - by default the paddle starts in the center of the screen
         this.reset = function() {
           this.clear();
-          this.yPos = $canvas.height / 2 - this.paddleHeight / 2;
-        }
+          this.yPos = this.$canvas.height / 2 - this.paddleHeight / 2;
+        };
 
         // Draw the rectangular paddle into the given context
         this.draw = function() {
           this.clear();
           this.context.fillStyle = this.fillColor;
           this.context.fillRect(this.xPos, this.yPos, this.paddleWidth, this.paddleHeight);
-        }
+        };
 
         // The horizontal position of the right side of the paddle
         this.right = function() {
           return this.paddleWidth + this.xPos;
-        }
+        };
 
         // The vertical position of the top of the paddle
         this.top = function() {
           return this.yPos;
-        }
+        };
+
+        // The horizontal position of the paddle
+        this.left = function() {
+          return this.xPos;
+        };
 
         // The vertical position of the bottom of the paddle
         this.bottom = function() {
           return this.yPos + this.paddleHeight;
-        }
+        };
 
         // Move the paddle one step, and keep in mind that the screen has upper and lower bounds
         // that the paddle can't cross.
         // Singular argument is the distance to the desired target
         this.edgeMove = function(distance) {
           if (distance < 0) {
-            if (this.top() > 0) this.yPos += -this.ySpeed;
+						if (this.top() > 0) {
+							this.yPos += -this.ySpeed;
+						}
           }
           else {
-            if (this.bottom() < $canvas.height) this.yPos += this.ySpeed;
+						if (this.bottom() < this.$canvas.height) {
+							this.yPos += this.ySpeed;
+						}
           }
-        }
+        };
 
         // Move the paddle to attempt to make its center even with the ball.  Limited by a max speed
         // When the ball is headed away from the paddle, move to center to wait
         this.move = function(ball) {
+					var distance;
           if (ball.xSpeed < 0) {
-            var distance = ball.yPos - (this.yPos + this.paddleHeight / 2);
+            distance = ball.yPos - (this.yPos + this.paddleHeight / 2);
             this.edgeMove(distance);
           }
           else {
-            var distance = $canvas.height / 2 - (this.yPos + this.paddleHeight / 2);
-            if (Math.abs(distance) >= this.ySpeed) this.edgeMove(distance); // no jitter
+            distance = this.$canvas.height / 2 - (this.yPos + this.paddleHeight / 2);
+						if (Math.abs(distance) >= this.ySpeed) {
+							this.edgeMove(distance); // no jitter
+						}
           }
-        }
+        };
 
         // Clear from the last place we were.
         // ordering of clears for performance reasons to avoid flicker
         this.clear = function() {
-          this.context.clearRect(this.xPos, this.yPos - this.ySpeed, this.paddleWidth, this.paddleHeight + this.ySpeed * 2);
-        }
+          this.context.clearRect(this.left(), this.top() - this.ySpeed, this.paddleWidth, this.paddleHeight + this.ySpeed * 2);
+        };
 
       }
 
@@ -183,11 +195,11 @@
           this.xSpeed = Math.random() > 0.5 ? this.magnitude : -this.magnitude;
           this.ySpeed = Math.random() > 0.5 ? this.magnitude : -this.magnitude;
           // This is the xPosition of the ball
-          this.xPos = $canvas.width / 2;
+          this.xPos = this.$canvas.width / 2;
           // This is the yPosition of the ball
           // initially dynamically decided randomly
-          this.yPos = Math.floor(Math.random() * $canvas.height);
-        }
+          this.yPos = Math.floor(Math.random() * this.$canvas.height);
+        };
 
         // Draw the ball in the given context
         this.draw = function() {
@@ -197,51 +209,59 @@
           this.context.arc(this.xPos, this.yPos, this.circleRadius, 0, Math.PI * 2, true);
           this.context.closePath();
           this.context.fill();
-        }
+        };
 
         // The vertical position of the top of the ball
         this.top = function() {
           return this.yPos - this.circleRadius;
-        }
+        };
 
         // The horizontal position of the left of the ball
         this.left = function() {
           return this.xPos - this.circleRadius;
-        }
+        };
 
         // The vertical position of the bottom of the ball
         this.bottom = function() {
           return this.yPos + this.circleRadius;
-        }
+        };
 
         // The horizontal position of the right of the ball
         this.right = function() {
           return this.xPos + this.circleRadius;
-        }
+        };
 
         // This will clear the ball from the given context
         this.clear = function() {
           this.context.clearRect(this.left(), this.top(), this.circleDiameter, this.circleDiameter);
-        }
+        };
 
         // This will clear the move of the ball from the given context
         // The reason we clear last instead of clearing current is for performance to reduce flicker on computation
         // for slow machines
         this.clearLast = function() {
           this.context.clearRect(this.left() - this.xSpeed, this.top() - this.ySpeed, this.circleDiameter, this.circleDiameter);
-        }
+        };
 
         // Make the next move for the ball
         this.move = function(hitterFrom, hitterTo) {  
           // Move horizontally
-          if (this.xPos >= this.$canvas.width - this.circleRadius) this.xSpeed = -this.magnitude;
-          else if (this.xPos <= leftEdge) this.xSpeed = this.magnitude;
+					if (this.xPos >= this.$canvas.width - this.circleRadius) {
+						this.xSpeed = -this.magnitude;
+					}
+					else if (this.xPos <= leftEdge) {
+						this.xSpeed = this.magnitude;
+					}
           this.xPos += this.xSpeed;
           // And vertically
-          if (this.yPos >= this.$canvas.height - this.circleRadius) this.ySpeed = -this.magnitude;
-          else if (this.yPos <= this.circleRadius) this.ySpeed = this.magnitude;
+					if (this.yPos >= this.$canvas.height - this.circleRadius) {
+						this.ySpeed = -this.magnitude;
+					}
+					else if (this.yPos <= this.circleRadius) {
+						this.ySpeed = this.magnitude;
+					}
           this.yPos += this.ySpeed;
-        }
+        };
 
       }
 
@@ -273,7 +293,9 @@
       var gameRunning = false;
       window.onmouseup = function() {
 
-        if (gameRunning) return;
+				if (gameRunning) {
+					return;
+				}
 
         // remove the intro box
         var $intro = document.getElementById('intro');
@@ -325,7 +347,7 @@
 
         }, 1000 / fps);
 
-      }
+      };
 
     </script>
 
