@@ -49,7 +49,7 @@
   <body>
 
     <div id="intro">
-			HTML5 <a href=''><code>&lt;canvas&gt;</code></a> is all the rage these days.<br/>
+			HTML5 <a href="http://en.wikipedia.org/wiki/Canvas_element"><code>&lt;canvas&gt;</code></a> is all the rage these days.<br/>
 			This canvas pong game uses your scrollbar as the paddle.<br/>
 			Click to start!
     </div>
@@ -57,7 +57,7 @@
 		<canvas id="canvas">
 		<script type="text/javascript">
 			if (!document.getElementById('canvas').getContext) { // stop evaluation
-			  var html = 'This page is built using a <a href="">HTML5 <code>&lt;canvas&gt;</code></a> tag.<br/>';
+			  var html = 'This page is built using a <a href="http://en.wikipedia.org/wiki/Canvas_element">HTML5 <code>&lt;canvas&gt;</code></a> tag.<br/>';
 			  html += 'Unfortunately, it looks like your browser doesn\'t support them.<br/>';
         html += 'Maybe you should upgrade to <a href="http://chrome.google.com/">Chrome</a> or <a href="http://getfirefox.com/">Firefox</a>.';
 			  document.getElementById('intro').innerHTML = html;
@@ -73,9 +73,9 @@
 
     <script>
       // TODO make the page unable to scroll after its over
-      // TODO get real links for things
 			// TODO validate
       // TODO beautify, performance, general cleanup, release OSS, make website
+			// TODO see if there's a better way to put a <script> inside of a <canvas> and have it not eval'ed
     </script>
 
     <script type="text/javascript">
