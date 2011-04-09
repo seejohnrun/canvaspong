@@ -48,23 +48,26 @@
 
   <body>
 
-    <div id="twitter">
-      <a href="http://twitter.com/seejohnrun">@seejohnrun on twitter</a>
-    </div>
-
     <div id="intro">
-      HTML5 <a href=''><code>&lt;canvas&gt;</code></a> is all the rage these days.
-      This canvas pong game uses your scrollbar as the paddle.  Click to start!
+			HTML5 <a href=''><code>&lt;canvas&gt;</code></a> is all the rage these days.<br/>
+			This canvas pong game uses your scrollbar as the paddle.<br/>
+			Click to start!
     </div>
 
 		<canvas id="canvas">
 		<script type="text/javascript">
-			var html = 'This page is built using a <a href="">HTML5 <code>&lt;canvas&gt;</code></a> tag.<br/>';
-			html += 'Unfortunately, it looks like your browser doesn\'t support them.<br/>';
-      html += 'Maybe you should upgrade to <a href="http://chrome.google.com/">Chrome</a> or <a href="http://getfirefox.com/">Firefox</a>.';
-			document.getElementById('intro').innerHTML = html;
+			if (!document.getElementById('canvas').getContext) { // stop evaluation
+			  var html = 'This page is built using a <a href="">HTML5 <code>&lt;canvas&gt;</code></a> tag.<br/>';
+			  html += 'Unfortunately, it looks like your browser doesn\'t support them.<br/>';
+        html += 'Maybe you should upgrade to <a href="http://chrome.google.com/">Chrome</a> or <a href="http://getfirefox.com/">Firefox</a>.';
+			  document.getElementById('intro').innerHTML = html;
+			}
 		</script>
 	  </canvas>
+
+    <div id="twitter">
+      <a href="http://twitter.com/seejohnrun">@seejohnrun on twitter</a>
+    </div>
 
     <div id="score"></div>
 
