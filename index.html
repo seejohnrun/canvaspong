@@ -27,6 +27,12 @@
         color: blue;
         text-decoration: none;
       }
+      #score {
+        position: fixed;
+        bottom: 30px;
+        right: 20px;
+        font-size: 42px;
+      }
     </style>
 
   </head>
@@ -41,15 +47,19 @@
       <a href="http://twitter.com/seejohnrun">@seejohnrun on twitter</a>
     </div>
 
+    <div id="score"></div>
+
     <script>
       // TODO make the page unable to scroll after its over
-      // TODO keep score on the screen
       // TODO beautify
       // TODO arrow to describe the game
       // TODO doctype
       // TODO make 'update yo shit' be something real
-      // TODO don't clear the paddle so aggressively
-      // TODO don't hard code paddle xPos in ball#draw
+      // TODO paddle hits cleaner - one idea is to shrink the size of the canvas horizontally
+      // DONETODO don't hard code paddle xPos in ball#draw
+      // DONETODO fix the stroke clearing issue after the game stops
+      // DONETODO keep score on the screen
+      // DONETODO don't clear the paddle so aggressively
       // DONETODO don't let the paddle descent off the screen
       // DONETODO cleaner hits
       // DONETODO put the ball in the center and have it decide which way to go
@@ -65,22 +75,19 @@
 
     <script type="text/javascript">
 
-      function Paddle(context, ball, paddleHeight) {
+      function Paddle(context, paddleHeight) {
 
         // Load the canvas and context
         this.$canvas = context.canvas;
         this.context = context;
 
-        // The ball we are trying to track
-        this.ball = ball;
-
         // Dimensions and colors
         this.paddleWidth = 20;
         this.paddleHeight = paddleHeight;
         this.fillColor = 'blue';
-        this.strokeColor = '#000';
 
         // The X position never changes
+        // keep this guy on the left edge of the screen
         this.xPos = 0;
 
         // The speed the paddle can move - never changes
@@ -94,9 +101,22 @@
         // Draw the rectangular paddle into the given context
         this.draw = function() {
           this.context.fillStyle = this.fillColor;
-          this.context.strokeStyle = this.strokeColor;
-          this.context.fillRect(this.xPos, this.yPos, this.paddleWidth - 2, this.paddleHeight - 2); // account for stroke
-          this.context.stroke();
+          this.context.fillRect(this.xPos, this.yPos, this.paddleWidth, this.paddleHeight);
+        }
+
+        // The horizontal position of the right side of the paddle
+        this.right = function() {
+          return this.paddleWidth + this.xPos;
+        }
+
+        // The vertical position of the top of the paddle
+        this.top = function() {
+          return this.yPos;
+        }
+
+        // The vertical position of the bottom of the paddle
+        this.bottom = function() {
+          return this.yPos + this.paddleHeight;
         }
 
         // Move the paddle one step, and keep in mind that the screen has upper and lower bounds
@@ -104,18 +124,18 @@
         // Singular argument is the distance to the desired target
         this.edgeMove = function(distance) {
           if (distance < 0) {
-            if (this.yPos > 0) this.yPos += -this.ySpeed;
+            if (this.top() > 0) this.yPos += -this.ySpeed;
           }
           else {
-            if (this.yPos + this.paddleHeight < document.body.clientHeight) this.yPos += this.ySpeed;
+            if (this.bottom() < document.body.clientHeight) this.yPos += this.ySpeed;
           }
         }
 
         // Move the paddle to attempt to make its center even with the ball.  Limited by a max speed
         // When the ball is headed away from the paddle, move to center to wait
-        this.move = function() {
+        this.move = function(ball) {
           if (ball.xSpeed < 0) {
-            var distance = this.ball.yPos - (this.yPos + this.paddleHeight / 2);
+            var distance = ball.yPos - (this.yPos + this.paddleHeight / 2);
             this.edgeMove(distance);
           }
           else {
@@ -124,26 +144,29 @@
           }
         }
 
-        // Clear from the last place we were.  The reason we clear larger than needed is to cover
+        // Clear from the last place we were.
         // ordering of clears for performance reasons to avoid flicker
         this.clear = function() {
-          this.context.clearRect(this.xPos, 0, this.paddleWidth, document.body.clientHeight);
+          // offset of one for the stroke
+          this.context.clearRect(this.xPos, this.yPos - this.ySpeed, this.paddleWidth, this.paddleHeight + this.ySpeed * 2);
         }
 
         this.reset();
 
       }
 
-      function Ball(context) {
+      function Ball(context, leftEdge) {
 
         // Load the canvas and context
         this.$canvas = context.canvas;
         this.context = context;
 
+        // Where the edge is
+        this.leftEdge = leftEdge;
+
         // This is the radius of the circle
         this.circleRadius = 10;
         this.fillColor = '#555';
-        this.strokeColor = '#000';
 
         // This is to set up to a neutral place to get ready to start playing
         this.reset = function() {
@@ -163,43 +186,59 @@
         // Draw the ball in the given context
         this.draw = function() {
           this.context.fillStyle = this.fillColor;
-          this.context.strokeStyle = this.strokeColor;
 
           this.context.beginPath();
-          this.context.arc(this.xPos, this.yPos, this.circleRadius - 1, 0, Math.PI * 2, true); // leave room for the stroke
+          this.context.arc(this.xPos, this.yPos, this.circleRadius, 0, Math.PI * 2, true);
           this.context.closePath();
           this.context.fill();
-          this.context.stroke();
+        }
+
+        // The vertical position of the top of the ball
+        this.top = function() {
+          return this.yPos - this.circleRadius;
+        }
+
+        // The horizontal position of the left of the ball
+        this.left = function() {
+          return this.xPos - this.circleRadius;
+        }
+
+        // The vertical position of the bottom of the ball
+        this.bottom = function() {
+          return this.yPos + this.circleRadius;
+        }
+
+        // The horizontal position of the right of the ball
+        this.right = function() {
+          return this.xPos + this.circleRadius;
         }
 
         // This will clear the ball from the given context
         this.clear = function() {
-          this.context.clearRect(this.xPos - this.circleRadius, this.yPos - this.circleRadius, this.circleRadius * 2, this.circleRadius * 2);
+          this.context.clearRect(this.left(), this.top(), this.circleRadius * 2, this.circleRadius * 2);
         }
 
         // This will clear the move of the ball from the given context
         // The reason we clear last instead of clearing current is for performance to reduce flicker on computation
         // for slow machines
         this.clearLast = function() {
-          this.context.clearRect(this.xPos - this.xSpeed - this.circleRadius, this.yPos - this.ySpeed - this.circleRadius, this.circleRadius * 2, this.circleRadius * 2);
+          this.context.clearRect(this.left() - this.xSpeed, this.top() - this.ySpeed, this.circleRadius * 2, this.circleRadius * 2);
         }
 
         // Make the next move for the ball
         this.move = function(hitterFrom, hitterTo) {  
           // Move horizontally
-          if ((this.xPos > this.$canvas.width - this.circleRadius) || (this.xPos < 20)) this.xSpeed = -this.xSpeed;
+          if ((this.xPos >= this.$canvas.width - this.circleRadius) || (this.xPos <= leftEdge)) this.xSpeed = -this.xSpeed;
           this.xPos += this.xSpeed;
           // And vertically
-          if ((this.yPos > this.$canvas.height - this.circleRadius) || (this.yPos < this.circleRadius)) this.ySpeed = -this.ySpeed;
+          if ((this.yPos >= this.$canvas.height - this.circleRadius) || (this.yPos <= this.circleRadius)) this.ySpeed = -this.ySpeed;
           this.yPos += this.ySpeed;
         }
-
-        this.reset();
 
       }
 
       // settings
-      var difficulty = 3;
+      var difficulty = 4;
       var fps = 100;
 
       // get the space
@@ -214,14 +253,18 @@
       $canvas.height = document.body.clientHeight;
       var context = $canvas.getContext('2d');
 
-      // Get a ball
-      var ball = new Ball(context);
-      var paddle = new Paddle(context, ball, hitterHeight);
+      // Get a ball and paddle
+      var paddle = new Paddle(context, hitterHeight);
+      var ball = new Ball(context, paddle.right());
+
+      // keep score
+      var theirScore = 0;
+      var yourScore = 0;
 
       window.onmouseup = function() {
 
-        // Reset the ball after each game
-        ball.clearLast();
+        // Reset the ball before each game
+        ball.clear();
         ball.reset();
 
         // Set the background to a non-error color
@@ -230,37 +273,37 @@
         // Keep it moving, bro
         var interval = setInterval(function() {
 
+          // Move the paddle and ball - paddle is at a disadvantage cause its first
+          paddle.move(ball);
+          ball.move();
+
+          // Draw the screen, clearing previous moves
+          ball.clearLast();
+          ball.draw();
+          paddle.clear();
+          paddle.draw();
+
           // If we're on the right side, consider that the user may have just lost
           if (ball.xPos >= $canvas.width - ball.circleRadius) {
             // Determine the position of the hittern and break on a match
             // Since this is scrollTop we need to offset it by clientHeight
             // NOTE: position represents the TOP of the hitter
             var position = (document.body.scrollTop / document.body.scrollHeight) * document.body.clientHeight;
-            if (ball.yPos < position || ball.yPos > position + hitterHeight) {
-              document.body.style.background = '#660000';
+            if (ball.bottom() < position || ball.top() > position + hitterHeight) {
+              document.body.style.background = '#ee7777';
+              document.getElementById('score').innerHTML = (theirScore += 1) + ' / ' + yourScore;
               clearInterval(interval);
-              return; // stop moving
             }
           }
 
           // If we're at the edge of the paddle, consider that it may not have gotten reflected
-          if (ball.xPos <= 20) {
-            if (ball.yPos < paddle.yPos || ball.yPos > paddle.yPos + paddle.paddleHeight) {
-              document.body.style.background = '#006600';
+          if (ball.xPos <= paddle.right()) {
+            if (ball.bottom() < paddle.top() || ball.top() > paddle.bottom()) {
+              document.body.style.background = '#77ee77';
+              document.getElementById('score').innerHTML = theirScore + ' / ' + (yourScore += 1);
               clearInterval(interval);
-              return; // stop moving
             }
           }
-
-          // Move the paddle and draw it - paddle is at a disadvantage cause its first
-          paddle.move();
-          paddle.clear();
-          paddle.draw();
-
-          // Move the ball and draw it
-          ball.move();
-          ball.clearLast();
-          ball.draw();
 
         }, 1000 / fps);
 
