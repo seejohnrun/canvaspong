@@ -1,8 +1,10 @@
+<!DOCTYPE html>
 <html>
 
   <head>
 
     <title>Canvas Pong</title>
+	  <meta http-equiv="Content-type" content="text/html; charset=utf-8">
 
     <style type="text/css">
       body {
@@ -67,9 +69,9 @@
     <script>
       // TODO make the page unable to scroll after its over
       // TODO beautify
-      // TODO doctype
       // TODO paddle hits cleaner - one idea is to shrink the size of the canvas horizontally
       // TODO get real links for things
+      // DONETODO doctype
       // DONETODO describe the game
       // DONETODO make 'update yo shit' be something real
       // DONETODO don't hard code paddle xPos in ball#draw
@@ -105,13 +107,14 @@
         // The X position never changes
         // keep this guy on the left edge of the screen
         this.xPos = 0;
+        this.yPos = 0;
 
         // The speed the paddle can move - never changes
         this.ySpeed = 4; // slightly slower than the ball
 
         // Get the paddle ready to go - by default the paddle starts in the center of the screen
         this.reset = function() {
-          this.yPos = document.body.clientHeight / 2 - this.paddleHeight / 2;
+          this.yPos = $canvas.height / 2 - this.paddleHeight / 2;
         }
 
         // Draw the rectangular paddle into the given context
@@ -143,7 +146,7 @@
             if (this.top() > 0) this.yPos += -this.ySpeed;
           }
           else {
-            if (this.bottom() < document.body.clientHeight) this.yPos += this.ySpeed;
+            if (this.bottom() < $canvas.height) this.yPos += this.ySpeed;
           }
         }
 
@@ -155,7 +158,7 @@
             this.edgeMove(distance);
           }
           else {
-            var distance = document.body.clientHeight / 2 - (this.yPos + this.paddleHeight / 2);
+            var distance = $canvas.height / 2 - (this.yPos + this.paddleHeight / 2);
             if (Math.abs(distance) >= this.ySpeed) this.edgeMove(distance); // no jitter
           }
         }
@@ -163,11 +166,8 @@
         // Clear from the last place we were.
         // ordering of clears for performance reasons to avoid flicker
         this.clear = function() {
-          // offset of one for the stroke
           this.context.clearRect(this.xPos, this.yPos - this.ySpeed, this.paddleWidth, this.paddleHeight + this.ySpeed * 2);
         }
-
-        this.reset();
 
       }
 
@@ -184,6 +184,9 @@
         this.circleRadius = 10;
         this.fillColor = '#555';
 
+        // Some initial value
+        this.xPos = 0; this.yPos = 0; this.ySpeed = 5; this.xSpeed = 5;
+
         // This is to set up to a neutral place to get ready to start playing
         this.reset = function() {
           // Clear the ball away from where it was
@@ -193,10 +196,10 @@
           this.xSpeed = Math.random() > 0.5 ? 5 : -5;
           this.ySpeed = Math.random() > 0.5 ? 5 : -5;
           // This is the xPosition of the ball
-          this.xPos = document.body.clientWidth / 2;
+          this.xPos = $canvas.width / 2;
           // This is the yPosition of the ball
           // initially dynamically decided randomly
-          this.yPos = Math.floor(Math.random() * document.body.clientHeight);
+          this.yPos = Math.floor(Math.random() * $canvas.height);
         }
 
         // Draw the ball in the given context
@@ -258,17 +261,17 @@
       var fps = 100;
 
       // get the space
-      document.body.style.height = document.body.clientHeight * difficulty;
-
-      // get the hitter height - cH^2/sH
-      var hitterHeight = Math.pow(document.body.clientHeight, 2) / document.body.scrollHeight;
+      document.body.style.height = (window.innerHeight * difficulty) + 'px';
 
       // get the canvas
       var $canvas = document.getElementById('canvas');
-      $canvas.width = document.body.clientWidth;
-      $canvas.height = document.body.clientHeight;
+      $canvas.width = window.innerWidth;
+      $canvas.height = window.innerHeight;
       var context = $canvas.getContext('2d');
       var defaultBackground = document.body.style.background;
+
+      // get the hitter height - cH^2/sH
+      var hitterHeight = Math.pow(window.innerHeight, 2) / document.body.scrollHeight;
 
       // Get a ball and paddle
       var paddle = new Paddle(context, hitterHeight);
@@ -277,7 +280,7 @@
       // keep score
       var theirScore = 0;
       var yourScore = 0;
-
+      
       window.onmouseup = function() {
 
         // remove the intro box
@@ -287,6 +290,7 @@
         // Reset the ball before each game
         ball.clear();
         ball.reset();
+        paddle.reset();
 
         // Set the background to a non-error color
         document.body.style.background = defaultBackground;
@@ -307,9 +311,9 @@
           // If we're on the right side, consider that the user may have just lost
           if (ball.xPos >= $canvas.width - ball.circleRadius) {
             // Determine the position of the hittern and break on a match
-            // Since this is scrollTop we need to offset it by clientHeight
+            // Since this is scrollY (top) we need to offset it by window.innerHeight
             // NOTE: position represents the TOP of the hitter
-            var position = (document.body.scrollTop / document.body.scrollHeight) * document.body.clientHeight;
+            var position = (window.scrollY / document.body.scrollHeight) * $canvas.height;
             if (ball.bottom() < position || ball.top() > position + hitterHeight) {
               document.body.style.background = '#ee7777';
               document.getElementById('score').innerHTML = (theirScore += 1) + ' / ' + yourScore;
