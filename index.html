@@ -53,6 +53,7 @@
       // TODO make 'update yo shit' be something real
       // TODO don't clear the paddle so aggressively
       // TODO don't hard code paddle xPos in ball#draw
+			// DONETODO give them the same size paddle as us
       // DONETODO other paddle
       // DONETODO click to start
       // DONETODO twitter link
@@ -64,7 +65,7 @@
 
     <script type="text/javascript">
 
-      function Paddle(context, ball) {
+      function Paddle(context, ball, paddleHeight) {
 
         // Load the canvas and context
         this.$canvas = context.canvas;
@@ -75,7 +76,7 @@
 
         // Dimensions and colors
         this.paddleWidth = 20;
-        this.paddleHeight = 100;
+        this.paddleHeight = paddleHeight;
         this.fillColor = 'blue';
         this.strokeColor = '#000';
 
@@ -199,7 +200,7 @@
 
       // Get a ball
       var ball = new Ball(context);
-      var paddle = new Paddle(context, ball);
+      var paddle = new Paddle(context, ball, hitterHeight);
 
       window.onmouseup = function() {
 
