@@ -165,6 +165,7 @@
 
         // This is the radius of the circle
         this.circleRadius = 10;
+        this.circleDiameter = this.circleRadius * 2;
         this.fillColor = 'blue';
 
         // The magnitude in a certain vector
@@ -192,7 +193,6 @@
         this.draw = function() {
           this.clearLast();
           this.context.fillStyle = this.fillColor;
-
           this.context.beginPath();
           this.context.arc(this.xPos, this.yPos, this.circleRadius, 0, Math.PI * 2, true);
           this.context.closePath();
@@ -221,14 +221,14 @@
 
         // This will clear the ball from the given context
         this.clear = function() {
-          this.context.clearRect(this.left(), this.top(), this.circleRadius * 2, this.circleRadius * 2);
+          this.context.clearRect(this.left(), this.top(), this.circleDiameter, this.circleDiameter);
         }
 
         // This will clear the move of the ball from the given context
         // The reason we clear last instead of clearing current is for performance to reduce flicker on computation
         // for slow machines
         this.clearLast = function() {
-          this.context.clearRect(this.left() - this.xSpeed, this.top() - this.ySpeed, this.circleRadius * 2, this.circleRadius * 2);
+          this.context.clearRect(this.left() - this.xSpeed, this.top() - this.ySpeed, this.circleDiameter, this.circleDiameter);
         }
 
         // Make the next move for the ball
