@@ -51,10 +51,10 @@
       // TODO make 'update yo shit' be something real
       // TODO don't clear the paddle so aggressively
       // TODO don't hard code paddle xPos in ball#draw
-			// TODO don't let the paddle descent off the screen
+      // DONETODO don't let the paddle descent off the screen
       // DONETODO cleaner hits
       // DONETODO put the ball in the center and have it decide which way to go
-			// DONETODO give them the same size paddle as us
+      // DONETODO give them the same size paddle as us
       // DONETODO other paddle
       // DONETODO click to start
       // DONETODO twitter link
@@ -100,17 +100,29 @@
           this.context.stroke();
         }
 
+        // Move the paddle one step, and keep in mind that the screen has upper and lower bounds
+        // that the paddle can't cross.
+        // Singular argument is the distance to the desired target
+        this.edgeMove = function(distance) {
+          if (distance < 0) {
+            if (this.yPos > 0) this.yPos += -this.ySpeed;
+          }
+          else {
+            if (this.yPos + this.paddleHeight < document.body.clientHeight) this.yPos += this.ySpeed;
+          }
+        }
+
         // Move the paddle to attempt to make its center even with the ball.  Limited by a max speed
-				// When the ball is headed away from the paddle, move to center to wait
+        // When the ball is headed away from the paddle, move to center to wait
         this.move = function() {
-					if (ball.xSpeed < 0) {
-						var distance = this.ball.yPos - (this.yPos + this.paddleHeight / 2);
-					  this.yPos += (distance < 0) ? -this.ySpeed : this.ySpeed;
-					}
-					else {
-						var distance = document.body.clientHeight / 2 - (this.yPos + this.paddleHeight / 2);
-					  if (Math.abs(distance) >= this.ySpeed) this.yPos += (distance < 0) ? -this.ySpeed : this.ySpeed; // no jitter
-					}
+          if (ball.xSpeed < 0) {
+            var distance = this.ball.yPos - (this.yPos + this.paddleHeight / 2);
+            this.edgeMove(distance);
+          }
+          else {
+            var distance = document.body.clientHeight / 2 - (this.yPos + this.paddleHeight / 2);
+            if (Math.abs(distance) >= this.ySpeed) this.edgeMove(distance); // no jitter
+          }
         }
 
         // Clear from the last place we were.  The reason we clear larger than needed is to cover
@@ -139,8 +151,8 @@
           // Clear the ball away from where it was
           this.clear();
           // This is the xSpeed of the ball, which will be added to the xPos on each iteration
-					// Initially, they are decided as either positive or negative
-					this.xSpeed = Math.random() > 0.5 ? 5 : -5;
+          // Initially, they are decided as either positive or negative
+          this.xSpeed = Math.random() > 0.5 ? 5 : -5;
           this.ySpeed = Math.random() > 0.5 ? 5 : -5;
           // This is the xPosition of the ball
           this.xPos = document.body.clientWidth / 2;
@@ -212,7 +224,7 @@
       window.onmouseup = function() {
 
         // Reset the ball after each game
-				ball.clearLast();
+        ball.clearLast();
         ball.reset();
 
         // Set the background to a non-error color
