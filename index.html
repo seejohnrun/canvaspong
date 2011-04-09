@@ -61,7 +61,7 @@
 
     <div id="intro">
       HTML5 <code>&lt;canvas&gt;</code> is all the rage these days.
-      This pong game uses your scrollbar as the paddle.  Click to start!
+      This canvas pong game uses your scrollbar as the paddle.  Click to start!
     </div>
 
     <div id="score"></div>
@@ -69,8 +69,9 @@
     <script>
       // TODO make the page unable to scroll after its over
       // TODO beautify
-      // TODO paddle hits cleaner - one idea is to shrink the size of the canvas horizontally
       // TODO get real links for things
+      // TODO performance, general cleanup, release OSS, make website
+      // DONETODO paddle hits cleaner - one idea is to shrink the size of the canvas horizontally
       // DONETODO doctype
       // DONETODO describe the game
       // DONETODO make 'update yo shit' be something real
@@ -186,6 +187,9 @@
         this.circleRadius = 10;
         this.fillColor = '#555';
 
+        // The magnitude in a certain vector
+        this.magnitude = 5;
+
         // Some initial value
         this.xPos = 0; this.yPos = 0; this.ySpeed = 5; this.xSpeed = 5;
 
@@ -195,8 +199,8 @@
           this.clear();
           // This is the xSpeed of the ball, which will be added to the xPos on each iteration
           // Initially, they are decided as either positive or negative
-          this.xSpeed = Math.random() > 0.5 ? 5 : -5;
-          this.ySpeed = Math.random() > 0.5 ? 5 : -5;
+          this.xSpeed = Math.random() > 0.5 ? this.magnitude : -this.magnitude;
+          this.ySpeed = Math.random() > 0.5 ? this.magnitude : -this.magnitude;
           // This is the xPosition of the ball
           this.xPos = $canvas.width / 2;
           // This is the yPosition of the ball
@@ -250,10 +254,12 @@
         // Make the next move for the ball
         this.move = function(hitterFrom, hitterTo) {  
           // Move horizontally
-          if ((this.xPos >= this.$canvas.width - this.circleRadius) || (this.xPos <= leftEdge)) this.xSpeed = -this.xSpeed;
+          if (this.xPos >= this.$canvas.width - this.circleRadius) this.xSpeed = -this.magnitude;
+          else if (this.xPos <= leftEdge) this.xSpeed = this.magnitude;
           this.xPos += this.xSpeed;
           // And vertically
-          if ((this.yPos >= this.$canvas.height - this.circleRadius) || (this.yPos <= this.circleRadius)) this.ySpeed = -this.ySpeed;
+          if (this.yPos >= this.$canvas.height - this.circleRadius) this.ySpeed = -this.magnitude;
+          else if (this.yPos <= this.circleRadius) this.ySpeed = this.magnitude;
           this.yPos += this.ySpeed;
         }
 
