@@ -8,7 +8,7 @@ Check out the demo at [http://canvaspong.com](http://canvaspong.com)
 
 ### License
 
-MIT License.  See attached `LICENSE`
+See attached `LICENSE`
 
 ### Author
 
