@@ -166,7 +166,7 @@
         // Clear from the last place we were.
         // ordering of clears for performance reasons to avoid flicker
         this.clear = function() {
-          this.context.clearRect(this.left(), this.top() - this.ySpeed, this.paddleWidth, this.paddleHeight + this.ySpeed * 2);
+          this.context.clearRect(this.left(), this.top() - this.ySpeed - 2, this.paddleWidth, this.paddleHeight + this.ySpeed * 2 + 4);
         };
 
       }
