@@ -6,10 +6,10 @@ Check out the demo at [http://seejohncode.com/canvaspong](http://seejohncode.com
 
 ---
 
-### License
-
-See attached `LICENSE`
-
 ### Author
 
 John Crepezzi
+
+### License
+
+See attached `LICENSE`
