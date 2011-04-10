@@ -244,8 +244,9 @@
         // This will clear the move of the ball from the given context
         // The reason we clear last instead of clearing current is for performance to reduce flicker on computation
         // for slow machines
+				// There is a workaroud here for Chrome, which has trouble with non-integral positions and clearing
         this.clearLast = function() {
-          this.context.clearRect(this.left() - this.xSpeed, this.top() - this.ySpeed, this.circleDiameter, this.circleDiameter);
+          this.context.clearRect(this.left() - this.xSpeed - 1, this.top() - this.ySpeed - 1, this.circleDiameter + 2, this.circleDiameter + 2);
         };
 
         // Make the next move for the ball
