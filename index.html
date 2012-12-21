@@ -11,7 +11,7 @@
         margin: 0px;
         padding: 0px;
         line-height: 1em;
-        background: #fff; 
+        background: #fff;
       }
       #canvas {
         position: fixed;
@@ -250,7 +250,7 @@
         };
 
         // Make the next move for the ball
-        this.move = function(hitterFrom, hitterTo) {  
+        this.move = function(hitterFrom, hitterTo) {
           // Move horizontally
           if (this.xPos >= this.$canvas.width - this.circleRadius) {
             this.xSpeed = -this.magnitude;
@@ -313,7 +313,7 @@
 
         // Set the background to a non-error color
         document.body.style.background = defaultBackground;
-     
+
         // Keep it moving, bro
         var interval = setInterval(function() {
 
